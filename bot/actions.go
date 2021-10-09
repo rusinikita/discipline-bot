@@ -6,8 +6,8 @@ import "gopkg.in/tucnak/telebot.v2"
 // send message
 // send callback response
 // edit message and it's buttons.
-type action interface {
-	do(b *telebot.Bot, r Request) error
+type Action interface {
+	Do(b *telebot.Bot, r Request) error
 }
 
 type Request struct {
@@ -19,7 +19,7 @@ type Message struct {
 	Text string
 }
 
-func (m Message) do(b *telebot.Bot, r Request) error {
+func (m Message) Do(b *telebot.Bot, r Request) error {
 	_, err := b.Send(r.m.Sender, m.Text)
 
 	return err
@@ -29,6 +29,6 @@ type Response struct {
 	Text string
 }
 
-func (r Response) do(b *telebot.Bot, request Request) error {
+func (r Response) Do(b *telebot.Bot, request Request) error {
 	return b.Respond(request.c, &telebot.CallbackResponse{Text: r.Text})
 }

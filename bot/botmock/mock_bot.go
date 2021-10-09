@@ -1,6 +1,7 @@
 package botmock
 
 import (
+	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/db"
 	"github.com/rusinikita/discipline-bot/db/dbmock"
 	"github.com/stretchr/testify/mock"
@@ -11,8 +12,12 @@ type BotMock struct {
 	db db.Base
 }
 
-func (b *BotMock) Do(action interface{}) bool {
-	return b.Called(action).Get(0).(bool)
+func (b *BotMock) Action(action bot.Action) {
+	b.Called(action)
+}
+
+func (b *BotMock) Err(err error) bool {
+	return b.Called(err).Get(0).(bool)
 }
 
 func (b *BotMock) Base() db.Base {

@@ -1,9 +1,8 @@
 package botmock_test
 
 import (
+	"errors"
 	"testing"
-
-	"github.com/rusinikita/discipline-bot/bot/botmock"
 
 	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/bot/botmock"
@@ -15,12 +14,16 @@ func TestBotMock_Do(t *testing.T) {
 
 	message := bot.Message{Text: "123"}
 	response := bot.Response{Text: "done"}
+	err := errors.New("test")
 
-	m.On("Do", mock.Anything).Return(true)
+	m.On("Action", mock.Anything)
+	m.On("Err", mock.Anything).Return(true)
 
-	m.Do(message)
-	m.Do(response)
+	m.Action(message)
+	m.Action(response)
+	m.Err(err)
 
-	m.AssertCalled(t, "Do", message)
-	m.AssertCalled(t, "Do", response)
+	m.AssertCalled(t, "Action", message)
+	m.AssertCalled(t, "Action", response)
+	m.AssertCalled(t, "Err", err)
 }

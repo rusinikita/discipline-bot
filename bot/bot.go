@@ -1,17 +1,16 @@
 package bot
 
 import (
-	"fmt"
 	"log"
-	"reflect"
 
 	"github.com/rusinikita/discipline-bot/db"
 	"gopkg.in/tucnak/telebot.v2"
 )
 
 type Bot interface {
-	// Do action or error
-	Do(action interface{}) bool
+	// Do Action or error
+	Action(action Action)
+	Err(err error) bool
 	Base() db.Base
 }
 
@@ -41,30 +40,13 @@ func fromCallback(b *telebot.Bot, c *telebot.Callback, db db.Base) Bot {
 	}
 }
 
-func (b bot) Do(i interface{}) bool {
-	switch action := i.(type) {
-	case action:
-		err := action.do(b.Bot, b.Request)
+func (b bot) Action(action Action) {
+	err := action.Do(b.Bot, b.Request)
 
-		logErr(err)
-
-		return err != nil
-
-	case error:
-		return b.handleErr(action)
-	default:
-		return b.handleErr(fmt.Errorf(
-			"unknown action: %s",
-			reflect.TypeOf(i).Name(),
-		))
-	}
+	logErr(err)
 }
 
-func (b bot) Base() db.Base {
-	return b.db
-}
-
-func (b bot) handleErr(err error) bool {
+func (b bot) Err(err error) bool {
 	if err == nil {
 		return false
 	}
@@ -85,6 +67,10 @@ func (b bot) handleErr(err error) bool {
 	}
 
 	return true
+}
+
+func (b bot) Base() db.Base {
+	return b.db
 }
 
 func logErr(err error) {
