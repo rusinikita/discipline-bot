@@ -6,7 +6,7 @@ type records struct {
 	Records interface{}
 }
 
-func (b Base) List(table string, list interface{}, view string) error {
+func (b base) List(table string, list interface{}, view string) error {
 	records := records{
 		Records: list,
 	}

@@ -9,7 +9,11 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
-type Base struct {
+type Base interface {
+	List(table string, list interface{}, view string) error
+}
+
+type base struct {
 	client *resty.Client
 }
 
@@ -36,7 +40,5 @@ func New() (b Base, err error) {
 		return err
 	})
 
-	b.client = client
-
-	return b, err
+	return base{client: client}, err
 }
