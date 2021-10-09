@@ -1,0 +1,16 @@
+# See https://golangci-lint.run/usage/configuration/#config-file
+
+linters:
+  enable-all: true
+  disable:
+    - ifshort
+    - gomnd
+    - goerr113
+    - exhaustivestruct
+    - forbidigo
+    - godox
+    - wrapcheck
+  fast: false
+
+issues:
+  fix: true
