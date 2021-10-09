@@ -5,11 +5,11 @@ import "time"
 type Task struct {
 	ID            string
 	Name          string
-	Note          string `json:"Notes"`
+	Note          string
 	Condition     string
 	Status        Status
-	Created       time.Time `json:"created_at"`
-	StatusUpdated time.Time `json:"status_updated_at"`
+	Created       time.Time
+	StatusUpdated time.Time
 }
 
 type Status string

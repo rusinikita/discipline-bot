@@ -13,7 +13,7 @@ type Handler interface {
 }
 
 func Unique(h Handler) string {
-	return strcase.ToSnake(reflect.ValueOf(h).Elem().Type().Name())
+	return strcase.ToSnake(reflect.ValueOf(h).Type().Name())
 }
 
 type Command interface {
@@ -28,7 +28,7 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 		c := c
 		endpoint := Unique(c)
 
-		b.Handle(endpoint, func(m *telebot.Message) {
+		b.Handle("/"+endpoint, func(m *telebot.Message) {
 			c.Do(fromMessage(b, m, base))
 		})
 

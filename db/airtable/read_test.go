@@ -1,7 +1,6 @@
 package airtable_test
 
 import (
-	"log"
 	"os"
 	"testing"
 
@@ -21,6 +20,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestBase_List(t *testing.T) {
+	t.Parallel()
+
 	b, err := airtable.New()
 	if err != nil {
 		t.Fatal(err)
@@ -28,9 +29,13 @@ func TestBase_List(t *testing.T) {
 
 	var tasks []task.Task
 
-	err = b.List("Задачи", &tasks, "Tasks todo")
+	err = b.List("Tasks", &tasks, "TODO")
 
-	log.Println(tasks)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, tasks)
+
+	for i, _t := range tasks {
+		assert.NotEmpty(t, _t.Name, "%d %s was empty", i, _t.ID)
+		assert.Equal(t, _t.Status, task.Todo)
+	}
 }

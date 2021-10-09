@@ -8,6 +8,8 @@ import (
 )
 
 func TestMockDB_List(t *testing.T) {
+	t.Parallel()
+
 	var (
 		m      = dbmock.MockDB{}
 		list   = []interface{}{1, "2", 3}

@@ -10,6 +10,8 @@ import (
 )
 
 func TestBotMock_Do(t *testing.T) {
+	t.Parallel()
+
 	m := botmock.BotMock{}
 
 	message := bot.Message{Text: "123"}

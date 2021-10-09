@@ -20,7 +20,9 @@ type Message struct {
 }
 
 func (m Message) Do(b *telebot.Bot, r Request) error {
-	_, err := b.Send(r.m.Sender, m.Text)
+	_, err := b.Send(r.m.Sender, m.Text, &telebot.SendOptions{
+		ParseMode: telebot.ModeHTML,
+	})
 
 	return err
 }
