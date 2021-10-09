@@ -1,4 +1,4 @@
-package db
+package airtable
 
 import (
 	"errors"
@@ -7,17 +7,14 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/go-multierror"
+	"github.com/rusinikita/discipline-bot/db"
 )
-
-type Base interface {
-	List(table string, list interface{}, view string) error
-}
 
 type base struct {
 	client *resty.Client
 }
 
-func New() (b Base, err error) {
+func New() (b db.Base, err error) {
 	id := os.Getenv("BASE_ID")
 	if id == "" {
 		err = multierror.Append(err, errors.New("BASE_ID env required"))

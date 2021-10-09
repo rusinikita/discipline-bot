@@ -1,8 +1,9 @@
-package dbtest
+package dbmock
 
 import (
-	"github.com/stretchr/testify/mock"
 	"reflect"
+
+	"github.com/stretchr/testify/mock"
 )
 
 type MockDB struct {

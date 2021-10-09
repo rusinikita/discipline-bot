@@ -1,4 +1,4 @@
-package db
+package airtable_test
 
 import (
 	"log"
@@ -6,13 +6,13 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/stretchr/testify/assert"
-
+	"github.com/rusinikita/discipline-bot/db/airtable"
 	"github.com/rusinikita/discipline-bot/task"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		panic(err)
 	}
@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestBase_List(t *testing.T) {
-	b, err := New()
+	b, err := airtable.New()
 	if err != nil {
 		t.Fatal(err)
 	}

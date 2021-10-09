@@ -1,14 +1,15 @@
-package dbtest
+package dbmock_test
 
 import (
 	"testing"
 
+	"github.com/rusinikita/discipline-bot/db/dbmock"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMockDB_List(t *testing.T) {
 	var (
-		m      = MockDB{}
+		m      = dbmock.MockDB{}
 		list   = []interface{}{1, "2", 3}
 		result []interface{}
 	)
