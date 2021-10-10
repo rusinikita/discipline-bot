@@ -42,9 +42,18 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 }
 
 type Button interface {
+	Text() string
 	Data() string
 	Scan(data string) Button
 	Do(b Bot)
+}
+
+func inlineButton(b Button) telebot.InlineButton {
+	return telebot.InlineButton{
+		Unique: Unique(b),
+		Text:   b.Text(),
+		Data:   b.Data(),
+	}
 }
 
 func registerButtons(bot *telebot.Bot, base db.Base, bb []Button) {

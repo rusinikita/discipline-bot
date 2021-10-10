@@ -12,13 +12,13 @@ const (
 	todoView   = "TODO"
 )
 
-type CurrentTask struct{}
+type currentTask struct{}
 
-func (c CurrentTask) Description() string {
+func (c currentTask) Description() string {
 	return "Sends top task from TODO table view"
 }
 
-func (c CurrentTask) Do(b bot.Bot) {
+func (c currentTask) Do(b bot.Bot) {
 	var tasks []Task
 
 	if b.Err(b.Base().List(tasksTable, &tasks, todoView)) {
@@ -27,5 +27,8 @@ func (c CurrentTask) Do(b bot.Bot) {
 
 	t := tasks[0]
 
-	b.Action(bot.Message{Text: currentTaskText(t.Name, t.Note)})
+	b.Action(bot.Message{
+		Text:    currentTaskText(t.Name, t.Note),
+		Buttons: []bot.Button{taskDone{taskID: t.ID}},
+	})
 }

@@ -2,18 +2,15 @@ package airtable
 
 import (
 	"errors"
-	"time"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 type records struct {
-	Records []record
+	Records []record `json:"records"`
 }
 
 type record struct {
-	ID     string
-	Fields map[string]interface{}
+	ID     string                 `json:"id"`
+	Fields map[string]interface{} `json:"fields"`
 }
 
 func (b base) List(table string, list interface{}, view string) error {
@@ -38,19 +35,5 @@ func (b base) List(table string, list interface{}, view string) error {
 		maps[i]["id"] = r.ID
 	}
 
-	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		Result:     list,
-		TagName:    "json",
-		DecodeHook: mapstructure.StringToTimeHookFunc(time.RFC3339),
-	})
-	if err != nil {
-		return err
-	}
-
-	err = decoder.Decode(maps)
-	if err != nil {
-		return err
-	}
-
-	return err
+	return decode(maps, list)
 }

@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/hashicorp/go-multierror"
+	"github.com/mitchellh/mapstructure"
 	"github.com/rusinikita/discipline-bot/db"
 )
 
@@ -38,4 +40,17 @@ func New() (b db.Base, err error) {
 	})
 
 	return base{client: client}, err
+}
+
+func decode(data interface{}, result interface{}) error {
+	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+		Result:     result,
+		TagName:    "json",
+		DecodeHook: mapstructure.StringToTimeHookFunc(time.RFC3339),
+	})
+	if err != nil {
+		return err
+	}
+
+	return decoder.Decode(data)
 }

@@ -34,6 +34,7 @@ func fromCallback(b *telebot.Bot, c *telebot.Callback, db db.Base) Bot {
 	return bot{
 		Bot: b,
 		Request: Request{
+			m: c.Message,
 			c: c,
 		},
 		db: db,
