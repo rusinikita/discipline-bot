@@ -6,8 +6,8 @@ You don't need to do MORE. You need to do LESS, but REGULAR.
 # Functions
 
 ### Tasks
-- todo: /current_task Get current task in message
-- todo: Marks task as done and send next task
+- /current_task Get current task in message
+- Marks task as done and sends next task
 - todo: Reminds about current task daily (task message, reminder task message with reply_to)
 - todo: Reminds about conditional task at some time (buy something after work, do at home)
 
