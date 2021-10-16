@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -44,13 +45,25 @@ func New() (b db.Base, err error) {
 
 func decode(data interface{}, result interface{}) error {
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		Result:     result,
-		TagName:    "json",
-		DecodeHook: mapstructure.StringToTimeHookFunc(time.RFC3339),
+		Result:           result,
+		TagName:          "json",
+		WeaklyTypedInput: true,
+		DecodeHook: mapstructure.ComposeDecodeHookFunc(
+			mapstructure.StringToTimeHookFunc(time.RFC3339),
+			intToDuration,
+		),
 	})
 	if err != nil {
 		return err
 	}
 
 	return decoder.Decode(data)
+}
+
+func intToDuration(f, t reflect.Type, data interface{}) (interface{}, error) {
+	if t != reflect.TypeOf(time.Duration(0)) {
+		return data, nil
+	}
+
+	return time.ParseDuration(fmt.Sprint(data) + "s")
 }

@@ -1,13 +1,17 @@
 package airtable
 
-import "errors"
+import (
+	"errors"
 
-func (b base) One(table, id string, entity interface{}) error {
+	"github.com/rusinikita/discipline-bot/db"
+)
+
+func (b base) One(id string, entity interface{}) error {
 	record := record{}
 
 	r, err := b.client.R().
 		SetResult(&record).
-		Get(table + "/" + id)
+		Get(db.TableName(entity) + "/" + id)
 	if err != nil {
 		return err
 	}

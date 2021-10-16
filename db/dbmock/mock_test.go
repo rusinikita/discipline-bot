@@ -18,7 +18,7 @@ func TestMockDB_List(t *testing.T) {
 
 	m.OnList().Return(list)
 
-	err := m.List("", &result, "")
+	err := m.List(&result)
 
 	assert.NoError(t, err)
 	assert.Equal(t, list, result)

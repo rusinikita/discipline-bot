@@ -2,6 +2,8 @@ package airtable
 
 import (
 	"errors"
+
+	"github.com/rusinikita/discipline-bot/db"
 )
 
 type records struct {
@@ -13,13 +15,20 @@ type record struct {
 	Fields map[string]interface{} `json:"fields"`
 }
 
-func (b base) List(table string, list interface{}, view string) error {
+func (b base) List(list interface{}, options ...db.Options) error {
 	records := records{}
 
-	r, err := b.client.R().
-		SetQueryParam("view", view).
-		SetResult(&records).
-		Get(table)
+	request := b.client.R().SetResult(&records)
+
+	if len(options) > 0 {
+		o := options[0]
+
+		if o.View != "" {
+			request = request.SetQueryParam("view", o.View)
+		}
+	}
+
+	r, err := request.Get(db.TableName(list))
 	if err != nil {
 		return err
 	}

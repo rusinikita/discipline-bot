@@ -38,8 +38,9 @@ Development in progress. I have no time for useful docs. Contact me, if you want
 - todo: server by docker-compose (https by traefik)
 - todo: server manual (https by caddy)
 
-# User manual
+# Readme and user manual
 
+- todo: crazy readme header images (WOW, Simple install, Wonderful features, Privacy, Donate)
 - todo: concepts and explanation: tasks, trackers, routines
 - todo: edit bot photo, name, etc.
 - todo: airtable/nocodb useful features and manual link

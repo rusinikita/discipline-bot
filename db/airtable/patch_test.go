@@ -3,14 +3,14 @@ package airtable_test
 import (
 	"testing"
 
+	"github.com/rusinikita/discipline-bot/db"
 	"github.com/rusinikita/discipline-bot/db/airtable"
 	"github.com/rusinikita/discipline-bot/task"
 	"github.com/stretchr/testify/assert"
 )
 
+// nolint:paralleltest // shoulg run after TestBase_One
 func TestBase_Patch(t *testing.T) {
-	t.Parallel()
-
 	b, err := airtable.New()
 	if err != nil {
 		t.Fatal(err)
@@ -18,7 +18,7 @@ func TestBase_Patch(t *testing.T) {
 
 	var tasks []task.Task
 
-	err = b.List("Tasks", &tasks, "TODO")
+	err = b.List(&tasks, db.Options{View: "TODO"})
 
 	assert.NoError(t, err)
 

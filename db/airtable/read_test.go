@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
+	"github.com/rusinikita/discipline-bot/db"
 	"github.com/rusinikita/discipline-bot/db/airtable"
 	"github.com/rusinikita/discipline-bot/task"
 	"github.com/stretchr/testify/assert"
@@ -29,7 +30,7 @@ func TestBase_List(t *testing.T) {
 
 	var tasks []task.Task
 
-	err = b.List("Tasks", &tasks, "TODO")
+	err = b.List(&tasks, db.Options{View: "TODO"})
 
 	assert.NoError(t, err)
 	assert.NotEmpty(t, tasks)
