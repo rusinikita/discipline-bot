@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// nolint:paralleltest // shoulg run after TestBase_One
+// nolint:paralleltest // should run after TestBase_One
 func TestBase_Patch(t *testing.T) {
 	b, err := airtable.New()
 	if err != nil {
@@ -21,6 +21,8 @@ func TestBase_Patch(t *testing.T) {
 	err = b.List(&tasks, db.Options{View: "TODO"})
 
 	assert.NoError(t, err)
+	assert.NotEmpty(t, tasks)
+	assert.NotEqual(t, tasks[0].Status, task.Done)
 
 	err = b.Patch("Tasks", tasks[0].ID, map[string]interface{}{
 		"Status": task.Done,
@@ -28,6 +30,14 @@ func TestBase_Patch(t *testing.T) {
 
 	assert.NoError(t, err)
 
+	expected := task.Task{}
+
+	err = b.One(tasks[0].ID, &expected)
+
+	assert.NoError(t, err)
+	assert.Equal(t, expected.Status, task.Done)
+
+	// return state
 	err = b.Patch("Tasks", tasks[0].ID, map[string]interface{}{
 		"Status": task.Todo,
 	})

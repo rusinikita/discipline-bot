@@ -15,3 +15,25 @@ func TestTableName(t *testing.T) {
 	assert.Equal(t, "Tasks", db.TableName([]task.Task{}))
 	assert.Equal(t, "Tasks", db.TableName(&[]task.Task{}))
 }
+
+func TestFields(t *testing.T) {
+	t.Parallel()
+
+	entity := task.Task{
+		ID:     "1",
+		Name:   "bla",
+		Note:   "bla",
+		Status: task.Todo,
+	}
+
+	// no ID field
+	// no Condition, Created, StatusUpdated field cause omitempty
+	// no CreatedField cause computed in
+	expected := map[string]interface{}{
+		"Name":   entity.Name,
+		"Note":   entity.Note,
+		"Status": entity.Status,
+	}
+
+	assert.Equal(t, expected, db.Fields(entity))
+}

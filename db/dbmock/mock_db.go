@@ -19,12 +19,16 @@ func (m *MockDB) OnList() *mock.Call {
 	return m.On("List")
 }
 
+func (m *MockDB) OnCreate() *mock.Call {
+	return m.On("Create")
+}
+
 func (m *MockDB) OnPatch() *mock.Call {
 	return m.On("Patch")
 }
 
-func (m *MockDB) OnCreate() *mock.Call {
-	return m.On("Create")
+func (m *MockDB) OnDelete() *mock.Call {
+	return m.On("Delete")
 }
 
 func (m *MockDB) One(id string, entity interface{}) error {
@@ -44,5 +48,9 @@ func (m *MockDB) Create(entity interface{}) error {
 }
 
 func (m *MockDB) Patch(table, id string, fields map[string]interface{}) error {
+	return m.Called().Get(0).(error)
+}
+
+func (m *MockDB) Delete(table, id string) error {
 	return m.Called().Get(0).(error)
 }

@@ -1,6 +1,9 @@
 package db
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 type ID string
 
@@ -9,6 +12,7 @@ type Base interface {
 	List(list interface{}, options ...Options) error
 	Create(entity interface{}) error
 	Patch(table, id string, fields map[string]interface{}) error
+	Delete(table, id string) error
 }
 
 type Options struct {
@@ -28,4 +32,37 @@ func TableName(entity interface{}) string {
 	}
 
 	return t.Name() + "s"
+}
+
+func Fields(entity interface{}) map[string]interface{} {
+	v := reflect.ValueOf(entity)
+
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	if v.Kind() != reflect.Struct {
+		panic("entity must be struct type or ptr")
+	}
+
+	m := map[string]interface{}{}
+
+	for i := 0; i < v.NumField(); i++ {
+		fType := v.Type().Field(i)
+		fName := fType.Name
+		fValue := v.Field(i)
+
+		if fName == "ID" {
+			continue
+		}
+
+		omitempty := strings.Contains(fType.Tag.Get("json"), "omitempty")
+		if omitempty && fValue.IsZero() {
+			continue
+		}
+
+		m[fName] = fValue.Interface()
+	}
+
+	return m
 }

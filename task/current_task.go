@@ -2,6 +2,7 @@ package task
 
 import (
 	"github.com/rusinikita/discipline-bot/bot"
+	"github.com/rusinikita/discipline-bot/db"
 )
 
 // message reply -> bot send (sendable (any), replyMarkup ())
@@ -21,7 +22,7 @@ func (c currentTask) Description() string {
 func (c currentTask) Do(b bot.Bot) {
 	var tasks []Task
 
-	if b.Err(b.Base().List(tasksTable, &tasks, todoView)) {
+	if b.Err(b.Base().List(&tasks, db.Options{View: todoView})) {
 		return
 	}
 

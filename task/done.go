@@ -25,7 +25,7 @@ func (d taskDone) Scan(data string) bot.Button {
 func (d taskDone) Do(b bot.Bot) {
 	t := Task{}
 
-	if b.Err(b.Base().One(tasksTable, d.taskID, &t)) {
+	if b.Err(b.Base().One(d.taskID, &t)) {
 		return
 	}
 

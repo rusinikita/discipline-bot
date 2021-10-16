@@ -17,6 +17,15 @@ type base struct {
 	client *resty.Client
 }
 
+type records struct {
+	Records []record `json:"records"`
+}
+
+type record struct {
+	ID     string                 `json:"id,omitempty"`
+	Fields map[string]interface{} `json:"fields"`
+}
+
 func New() (b db.Base, err error) {
 	id := os.Getenv("BASE_ID")
 	if id == "" {

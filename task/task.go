@@ -6,10 +6,10 @@ type Task struct {
 	ID            string
 	Name          string
 	Note          string
-	Condition     string
+	Condition     string `json:",omitempty"`
 	Status        Status
-	Created       time.Time
-	StatusUpdated time.Time
+	Created       time.Time `json:",omitempty"`
+	StatusUpdated time.Time `json:",omitempty"`
 }
 
 type Status string
