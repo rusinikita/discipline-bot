@@ -30,13 +30,29 @@ func TestBase_List(t *testing.T) {
 
 	var tasks []task.Task
 
-	err = b.List(&tasks, db.Options{View: "TODO"})
+	t.Run("list view", func(t *testing.T) {
+		t.Parallel()
 
-	assert.NoError(t, err)
-	assert.NotEmpty(t, tasks)
+		err = b.List(&tasks, db.Options{View: "TODO"})
 
-	for i, _t := range tasks {
-		assert.NotEmpty(t, _t.Name, "%d %s was empty", i, _t.ID)
-		assert.Equal(t, _t.Status, task.Todo)
-	}
+		assert.NoError(t, err)
+		assert.NotEmpty(t, tasks)
+
+		for i, _t := range tasks {
+			assert.NotEmpty(t, _t.Name, "%d %s was empty", i, _t.ID)
+			assert.Equal(t, _t.Status, task.Todo)
+		}
+	})
+
+	t.Run("list filter", func(t *testing.T) {
+		t.Parallel()
+
+		name := "Test task"
+
+		err = b.List(&tasks, db.Options{Filter: task.Task{Name: name}})
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, tasks)
+		assert.Equal(t, name, tasks[0].Name)
+	})
 }

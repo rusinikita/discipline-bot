@@ -2,6 +2,9 @@ package airtable
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
+	"strings"
 
 	"github.com/rusinikita/discipline-bot/db"
 )
@@ -16,6 +19,10 @@ func (b base) List(list interface{}, options ...db.Options) error {
 
 		if o.View != "" {
 			request = request.SetQueryParam("view", o.View)
+		}
+
+		if o.Filter != nil {
+			request = request.SetQueryParam("filterByFormula", filterString(o.Filter))
 		}
 	}
 
@@ -36,4 +43,21 @@ func (b base) List(list interface{}, options ...db.Options) error {
 	}
 
 	return decode(maps, list)
+}
+
+func filterString(entity interface{}) string {
+	var fieldFilters []string //nolint:prealloc // can't preallocate
+
+	for key, value := range db.Fields(entity) {
+		if reflect.ValueOf(value).IsZero() {
+			continue
+		}
+
+		// potential bug with '' wrapping
+		fieldFilter := fmt.Sprintf("{%s} = '%v'", key, value)
+
+		fieldFilters = append(fieldFilters, fieldFilter)
+	}
+
+	return fmt.Sprintf("AND(%s)", strings.Join(fieldFilters, ", "))
 }
