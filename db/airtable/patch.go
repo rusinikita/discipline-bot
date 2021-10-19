@@ -1,8 +1,12 @@
 package airtable
 
-import "errors"
+import (
+	"errors"
 
-func (b base) Patch(table, id string, fields map[string]interface{}) error {
+	"github.com/rusinikita/discipline-bot/db"
+)
+
+func (b base) Patch(table string, id db.ID, fields map[string]interface{}) error {
 	r, err := b.client.R().
 		SetBody(records{Records: []record{
 			{

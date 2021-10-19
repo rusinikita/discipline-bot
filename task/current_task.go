@@ -15,6 +15,8 @@ const (
 
 type currentTask struct{}
 
+func (c currentTask) Scan(string) bot.Command { return c }
+
 func (c currentTask) Description() string {
 	return "Sends top task from TODO table view"
 }

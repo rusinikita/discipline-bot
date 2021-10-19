@@ -7,12 +7,18 @@ import (
 
 type ID string
 
+func IDp(s string) *ID {
+	id := ID(s)
+
+	return &id
+}
+
 type Base interface {
-	One(id string, entity interface{}) error
+	One(id ID, entity interface{}) error
 	List(list interface{}, options ...Options) error
 	Create(entity interface{}) error
-	Patch(table, id string, fields map[string]interface{}) error
-	Delete(table, id string) error
+	Patch(table string, id ID, fields map[string]interface{}) error
+	Delete(table string, id ID) error
 }
 
 type Options struct {
@@ -62,6 +68,15 @@ func Fields(entity interface{}) map[string]interface{} {
 		}
 
 		m[fName] = fValue.Interface()
+
+		if fType.Type.Kind() == reflect.Ptr {
+			fType.Type = fType.Type.Elem()
+			fValue = fValue.Elem()
+		}
+
+		if fType.Type == reflect.TypeOf(ID("")) {
+			m[fName] = []string{fValue.String()}
+		}
 	}
 
 	return m

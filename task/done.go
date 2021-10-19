@@ -2,10 +2,11 @@ package task
 
 import (
 	"github.com/rusinikita/discipline-bot/bot"
+	"github.com/rusinikita/discipline-bot/db"
 )
 
 type taskDone struct {
-	taskID string
+	taskID db.ID
 }
 
 func (d taskDone) Text() string {
@@ -13,11 +14,11 @@ func (d taskDone) Text() string {
 }
 
 func (d taskDone) Data() string {
-	return d.taskID
+	return string(d.taskID)
 }
 
 func (d taskDone) Scan(data string) bot.Button {
-	d.taskID = data
+	d.taskID = db.ID(data)
 
 	return d
 }

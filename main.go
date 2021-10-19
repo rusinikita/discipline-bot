@@ -9,6 +9,7 @@ import (
 	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/db/airtable"
 	"github.com/rusinikita/discipline-bot/task"
+	"github.com/rusinikita/discipline-bot/tracking"
 	"gopkg.in/tucnak/telebot.v2"
 )
 
@@ -32,7 +33,12 @@ func main() {
 		return
 	}
 
-	bot.RegisterHandlers(b, db, task.Handlers())
+	handlers := append(
+		task.Handlers(),
+		tracking.Handlers()...,
+	)
+
+	bot.RegisterHandlers(b, db, handlers)
 
 	b.Start()
 }

@@ -1,10 +1,15 @@
 package task
 
-import "time"
+import (
+	"time"
+
+	"github.com/rusinikita/discipline-bot/db"
+)
 
 type Task struct {
-	ID            string
+	ID            db.ID
 	Name          string
+	Business      *db.ID `json:",omitempty"`
 	Note          string
 	Condition     string `json:",omitempty"`
 	Status        Status

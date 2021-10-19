@@ -24,8 +24,9 @@ func (r Request) user() *telebot.User {
 }
 
 type Message struct {
-	Text    string
-	Buttons []Button
+	Text     string
+	DeleteRM bool // Deletes request message from chat history
+	Buttons  []Button
 }
 
 func (m Message) options() *telebot.SendOptions {
@@ -45,8 +46,15 @@ func (m Message) options() *telebot.SendOptions {
 
 func (m Message) Do(b *telebot.Bot, r Request) error {
 	_, err := b.Send(r.user(), m.Text, m.options())
+	if err != nil {
+		return err
+	}
 
-	return err
+	if m.DeleteRM {
+		return b.Delete(r.m)
+	}
+
+	return nil
 }
 
 type Response struct {

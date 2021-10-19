@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"log"
 	"reflect"
 
 	"github.com/iancoleman/strcase"
@@ -18,7 +19,8 @@ func Unique(h Handler) string {
 
 type Command interface {
 	Description() string
-	Do(b Bot)
+	Scan(data string) Command
+	Handler
 }
 
 func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
@@ -29,7 +31,7 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 		endpoint := Unique(c)
 
 		b.Handle("/"+endpoint, func(m *telebot.Message) {
-			c.Do(fromMessage(b, m, base))
+			c.Scan(m.Payload).Do(fromMessage(b, m, base))
 		})
 
 		menu[i] = telebot.Command{
@@ -45,7 +47,7 @@ type Button interface {
 	Text() string
 	Data() string
 	Scan(data string) Button
-	Do(b Bot)
+	Handler
 }
 
 func inlineButton(b Button) telebot.InlineButton {
@@ -79,6 +81,8 @@ func RegisterHandlers(b *telebot.Bot, db db.Base, hh []Handler) {
 			commands = append(commands, handler)
 		case Button:
 			buttons = append(buttons, handler)
+		default:
+			log.Fatalf("unknown handler type: %T", h)
 		}
 	}
 

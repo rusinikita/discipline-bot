@@ -22,7 +22,7 @@ type records struct {
 }
 
 type record struct {
-	ID     string                 `json:"id,omitempty"`
+	ID     db.ID                  `json:"id,omitempty"`
 	Fields map[string]interface{} `json:"fields"`
 }
 
@@ -39,6 +39,7 @@ func New() (b db.Base, err error) {
 
 	client := resty.New()
 
+	client.SetDebug(os.Getenv("MODE") == "debug")
 	// todo: setup airtable or nocodb
 	client.SetHostURL("https://api.airtable.com/v0/" + id)
 	client.SetAuthScheme("Bearer")
@@ -54,12 +55,12 @@ func New() (b db.Base, err error) {
 
 func decode(data interface{}, result interface{}) error {
 	decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
-		Result:           result,
-		TagName:          "json",
-		WeaklyTypedInput: true,
+		Result:  result,
+		TagName: "json",
 		DecodeHook: mapstructure.ComposeDecodeHookFunc(
 			mapstructure.StringToTimeHookFunc(time.RFC3339),
 			intToDuration,
+			sliceToID,
 		),
 	})
 	if err != nil {
@@ -69,7 +70,39 @@ func decode(data interface{}, result interface{}) error {
 	return decoder.Decode(data)
 }
 
-func intToDuration(f, t reflect.Type, data interface{}) (interface{}, error) {
+func sliceToID(f, t reflect.Type, data interface{}) (interface{}, error) {
+	if f.Kind() != reflect.Slice {
+		return data, nil
+	}
+
+	isPtr := t.Kind() == reflect.Ptr
+	if isPtr {
+		t = t.Elem()
+	}
+
+	if t != reflect.TypeOf(db.ID("")) {
+		return data, nil
+	}
+
+	v := reflect.ValueOf(data)
+
+	if v.Len() == 0 {
+		if isPtr {
+			return nil, nil
+		}
+
+		return data, errors.New("relation id required")
+	}
+
+	id := v.Index(0).String()
+	if isPtr {
+		return &id, nil
+	}
+
+	return db.ID(id), nil
+}
+
+func intToDuration(_, t reflect.Type, data interface{}) (interface{}, error) {
 	if t != reflect.TypeOf(time.Duration(0)) {
 		return data, nil
 	}

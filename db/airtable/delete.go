@@ -2,10 +2,12 @@ package airtable
 
 import (
 	"errors"
+
+	"github.com/rusinikita/discipline-bot/db"
 )
 
-func (b base) Delete(table, id string) error {
-	r, err := b.client.R().Delete(table + "/" + id)
+func (b base) Delete(table string, id db.ID) error {
+	r, err := b.client.R().Delete(table + "/" + string(id))
 	if err != nil {
 		return err
 	}
