@@ -45,10 +45,14 @@ func (b base) List(list interface{}, options ...db.Options) error {
 	return decode(maps, list)
 }
 
-func filterString(entity interface{}) string {
+func filterString(filter interface{}) string {
+	if s, ok := filter.(string); ok {
+		return s
+	}
+
 	var fieldFilters []string //nolint:prealloc // can't preallocate
 
-	for key, value := range db.Fields(entity) {
+	for key, value := range db.Fields(filter) {
 		if reflect.ValueOf(value).IsZero() {
 			continue
 		}

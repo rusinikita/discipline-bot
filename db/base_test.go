@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/rusinikita/discipline-bot/db"
+	"github.com/rusinikita/discipline-bot/routine"
 	"github.com/rusinikita/discipline-bot/task"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,6 +15,7 @@ func TestTableName(t *testing.T) {
 	assert.Equal(t, "Tasks", db.TableName(&task.Task{}))
 	assert.Equal(t, "Tasks", db.TableName([]task.Task{}))
 	assert.Equal(t, "Tasks", db.TableName(&[]task.Task{}))
+	assert.Equal(t, "RoutineTries", db.TableName(&[]routine.Try{}))
 }
 
 func TestFields(t *testing.T) {

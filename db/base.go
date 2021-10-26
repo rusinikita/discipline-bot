@@ -21,6 +21,10 @@ type Base interface {
 	Delete(table string, id ID) error
 }
 
+type TableNamer interface {
+	TableName() string
+}
+
 type Options struct {
 	View   string      // view for records filter
 	Filter interface{} // entity obj with not zero values filter fields
@@ -35,6 +39,10 @@ func TableName(entity interface{}) string {
 
 	if t.Kind() == reflect.Slice {
 		t = t.Elem()
+	}
+
+	if namer, ok := reflect.New(t).Interface().(TableNamer); ok {
+		return namer.TableName()
 	}
 
 	return t.Name() + "s"

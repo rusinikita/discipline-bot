@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/db/airtable"
+	"github.com/rusinikita/discipline-bot/routine"
 	"github.com/rusinikita/discipline-bot/task"
 	"github.com/rusinikita/discipline-bot/tracking"
 	"gopkg.in/tucnak/telebot.v2"
@@ -37,6 +38,7 @@ func main() {
 		task.Handlers(),
 		tracking.Handlers()...,
 	)
+	handlers = append(handlers, routine.Handlers()...)
 
 	bot.RegisterHandlers(b, db, handlers)
 
