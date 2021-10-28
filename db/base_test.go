@@ -41,3 +41,14 @@ func TestFields(t *testing.T) {
 
 	assert.Equal(t, expected, db.Fields(entity))
 }
+
+func TestSetID(t *testing.T) {
+	t.Parallel()
+
+	_task := task.Task{Name: "Bla"}
+	id := db.ID("opaopa")
+
+	db.SetID(id, &_task)
+
+	assert.Equal(t, id, _task.ID)
+}

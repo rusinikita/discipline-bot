@@ -2,11 +2,9 @@ package routine
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/db"
-	"github.com/rusinikita/discipline-bot/tracking/tracker"
 )
 
 type start struct {
@@ -39,37 +37,22 @@ func (s start) Do(b bot.Bot) {
 		return
 	}
 
-	// get trackers
-	var (
-		routine  = routines[0]
-		filter   = fmt.Sprintf(`FIND("%s", {Routines})`, routine.Name)
-		trackers []tracker.Tracker
-	)
+	// create try
+	newTry := Try{Routine: routines[0].ID}
 
-	if b.Err(b.Base().List(&trackers, db.Options{Filter: filter})) {
+	if b.Err(b.Base().Create(&newTry)) {
 		return
 	}
 
-	// todo: crate routine try
-
-	// send message
-	ts := make([]string, len(trackers))
-	for i, t := range trackers {
-		ts[i] = fmt.Sprintf("[ ] %s", t.Name)
+	// return state message
+	t, err := getTry(newTry.ID, b.Base())
+	if b.Err(err) {
+		return
 	}
 
-	text := fmt.Sprintf(
-		"Start '%s' #routine\n\n%d/%d\n\n%s",
-		routine.Name, 0, len(trackers),
-		strings.Join(ts, "\n"),
-	)
+	m := t.message()
 
-	// todo: add bool tracker buttons
-	// todo: add input handling
-	// todo: add force reply if has input trackers
-	// todo: add other tracker buttons (to change reply input tracker)
-	b.Action(bot.Message{
-		Text:     text,
-		DeleteRM: true,
-	})
+	m.DeleteRM = true
+
+	b.Action(m)
 }

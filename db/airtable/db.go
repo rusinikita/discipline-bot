@@ -44,11 +44,6 @@ func New() (b db.Base, err error) {
 	client.SetHostURL("https://api.airtable.com/v0/" + id)
 	client.SetAuthScheme("Bearer")
 	client.SetAuthToken(apikey)
-	client.OnResponseLog(func(log *resty.ResponseLog) error {
-		_, err := fmt.Println(*log)
-
-		return err
-	})
 
 	return base{client: client}, err
 }
@@ -94,7 +89,7 @@ func sliceToID(f, t reflect.Type, data interface{}) (interface{}, error) {
 		return data, errors.New("relation id required")
 	}
 
-	id := v.Index(0).String()
+	id := v.Index(0).Elem().String()
 	if isPtr {
 		return &id, nil
 	}

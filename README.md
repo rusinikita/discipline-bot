@@ -25,7 +25,7 @@ Development in progress. I have no time for useful docs. Contact me, if you want
 
 ### Routines
 - /start <routine_name> Start passing checklist (track something, do something)
-  - todo: true/false done button
+  - true/false done button
   - todo: finish button to reformat message and hide buttons
   - todo: <track_short_name> <value> in user message will be interpreted
 - todo: Reminds about important routines daily

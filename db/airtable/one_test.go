@@ -22,6 +22,8 @@ func TestBase_One(t *testing.T) {
 	err = b.List(&tasks, db.Options{View: "TODO"})
 
 	assert.NoError(t, err)
+	// catch wrong id parsing
+	assert.NotContains(t, *tasks[0].Business, "<")
 
 	result := task.Task{}
 

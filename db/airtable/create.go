@@ -13,6 +13,7 @@ func (b base) Create(entity interface{}) error {
 
 	r, err := b.client.R().
 		SetBody(records).
+		SetResult(&records).
 		Post(db.TableName(entity))
 	if err != nil {
 		return err
@@ -21,6 +22,9 @@ func (b base) Create(entity interface{}) error {
 	if r.IsError() {
 		return errors.New(string(r.Body()))
 	}
+
+	// change ID if ptr
+	db.SetID(records.Records[0].ID, entity)
 
 	return nil
 }

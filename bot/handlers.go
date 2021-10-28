@@ -3,6 +3,7 @@ package bot
 import (
 	"log"
 	"reflect"
+	"strings"
 
 	"github.com/iancoleman/strcase"
 	"github.com/rusinikita/discipline-bot/db"
@@ -31,7 +32,7 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 		endpoint := Unique(c)
 
 		b.Handle("/"+endpoint, func(m *telebot.Message) {
-			c.Scan(m.Payload).Do(fromMessage(b, m, base))
+			c.Scan(strings.TrimSpace(m.Payload)).Do(fromMessage(b, m, base))
 		})
 
 		menu[i] = telebot.Command{

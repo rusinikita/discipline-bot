@@ -32,13 +32,15 @@ func TestBase_Create(t *testing.T) {
 
 	prevLen := len(tasks)
 
-	err = b.Create(task.Task{
+	entity := task.Task{
 		Name:   "Bla",
 		Note:   "Bla",
 		Status: task.Todo,
-	})
+	}
 
+	err = b.Create(&entity)
 	assert.NoError(t, err)
+	assert.NotEmpty(t, entity.ID)
 
 	update()
 	assert.Len(t, tasks, prevLen+1)

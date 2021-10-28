@@ -11,13 +11,21 @@ import (
 )
 
 type Record struct {
-	ID       db.ID
-	Time     time.Time     `json:",omitempty"`
-	Tracker  db.ID         `json:",omitempty"`
-	Rating   uint          `json:",omitempty"`
-	Number   uint          `json:",omitempty"`
-	Duration time.Duration `json:",omitempty"`
-	Text     string        `json:",omitempty"`
+	ID         db.ID
+	Time       time.Time     `json:",omitempty"`
+	Tracker    db.ID         `json:",omitempty"`
+	RoutineTry db.ID         `json:",omitempty"`
+	Rating     uint          `json:",omitempty"`
+	Number     uint          `json:",omitempty"`
+	Duration   time.Duration `json:",omitempty"`
+	Text       string        `json:",omitempty"`
+}
+
+func NewBoolRecord(id db.ID, try db.ID) Record {
+	return Record{
+		Tracker:    id,
+		RoutineTry: try,
+	}
 }
 
 func NewRecord(text string, parent tracker.Tracker) (r Record, err error) {

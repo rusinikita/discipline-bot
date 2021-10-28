@@ -89,3 +89,12 @@ func Fields(entity interface{}) map[string]interface{} {
 
 	return m
 }
+
+func SetID(id ID, entity interface{}) {
+	v := reflect.ValueOf(entity)
+	if v.Kind() != reflect.Ptr {
+		return
+	}
+
+	v.Elem().FieldByName("ID").Set(reflect.ValueOf(id))
+}
