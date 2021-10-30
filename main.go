@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/db/airtable"
+	"github.com/rusinikita/discipline-bot/env"
 	"github.com/rusinikita/discipline-bot/reminder"
 	"github.com/rusinikita/discipline-bot/routine"
 	"github.com/rusinikita/discipline-bot/task"
@@ -52,8 +53,20 @@ func main() {
 }
 
 func settings() telebot.Settings {
+	longPoller := &telebot.LongPoller{Timeout: 10 * time.Second}
+	auth := func(u *telebot.Update) bool {
+		switch {
+		case u.Message != nil:
+			return u.Message.Sender.ID == env.UserID()
+		case u.Callback != nil:
+			return u.Callback.Sender.ID == env.UserID()
+		default:
+			return false
+		}
+	}
+
 	return telebot.Settings{
 		Token:  os.Getenv("BOT_TOKEN"),
-		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
+		Poller: telebot.NewMiddlewarePoller(longPoller, auth),
 	}
 }
