@@ -11,11 +11,19 @@ type start struct {
 	Name string
 }
 
+func (s start) Text() string {
+	return "Start"
+}
+
+func (s start) Data() string {
+	return s.Name
+}
+
 func (s start) Description() string {
 	return "Starts routine by name"
 }
 
-func (s start) Scan(data string) bot.Command {
+func (s start) Scan(data string) bot.Handler {
 	s.Name = data
 
 	return s

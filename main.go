@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rusinikita/discipline-bot/bot"
 	"github.com/rusinikita/discipline-bot/db/airtable"
+	"github.com/rusinikita/discipline-bot/reminder"
 	"github.com/rusinikita/discipline-bot/routine"
 	"github.com/rusinikita/discipline-bot/task"
 	"github.com/rusinikita/discipline-bot/tracking"
@@ -40,7 +41,12 @@ func main() {
 	)
 	handlers = append(handlers, routine.Handlers()...)
 
+	startReminder := reminder.StartReminder{}
+	handlers = append(handlers, startReminder, reminder.DebugReminder{})
+
 	bot.RegisterHandlers(b, db, handlers)
+
+	startReminder.Do(bot.DefaultBot(b, db))
 
 	b.Start()
 }

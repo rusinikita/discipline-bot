@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/mitchellh/mapstructure"
 	"github.com/rusinikita/discipline-bot/db"
+	"github.com/rusinikita/discipline-bot/env"
 )
 
 type base struct {
@@ -39,7 +40,7 @@ func New() (b db.Base, err error) {
 
 	client := resty.New()
 
-	client.SetDebug(os.Getenv("MODE") == "debug")
+	client.SetDebug(env.Debug())
 	// todo: setup airtable or nocodb
 	client.SetHostURL("https://api.airtable.com/v0/" + id)
 	client.SetAuthScheme("Bearer")

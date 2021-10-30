@@ -15,7 +15,7 @@ type Track struct {
 	Text        string
 }
 
-func (t Track) Scan(data string) bot.Command {
+func (t Track) Scan(data string) bot.Handler {
 	ss := make([]string, 2)
 
 	for i, s := range strings.SplitN(data, " ", 2) {

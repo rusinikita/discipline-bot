@@ -20,6 +20,13 @@ type bot struct {
 	db db.Base
 }
 
+func DefaultBot(b *telebot.Bot, db db.Base) Bot {
+	return bot{
+		Bot: b,
+		db:  db,
+	}
+}
+
 func fromMessage(b *telebot.Bot, m *telebot.Message, db db.Base) Bot {
 	return bot{
 		Bot: b,

@@ -43,7 +43,7 @@ func (t trackBoolBtn) Data() string {
 	return fmt.Sprintf("%s,%s", t.ID, t.TryID)
 }
 
-func (t trackBoolBtn) Scan(data string) bot.Button {
+func (t trackBoolBtn) Scan(data string) bot.Handler {
 	ss := strings.Split(data, ",")
 
 	t.ID, t.TryID = db.ID(ss[0]), db.ID(ss[1])

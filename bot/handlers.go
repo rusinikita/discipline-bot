@@ -14,13 +14,16 @@ type Handler interface {
 	Do(Bot)
 }
 
+type Scanner interface {
+	Scan(data string) Handler
+}
+
 func Unique(h Handler) string {
 	return strcase.ToSnake(reflect.ValueOf(h).Type().Name())
 }
 
 type Command interface {
 	Description() string
-	Scan(data string) Command
 	Handler
 }
 
@@ -32,7 +35,13 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 		endpoint := Unique(c)
 
 		b.Handle("/"+endpoint, func(m *telebot.Message) {
-			c.Scan(strings.TrimSpace(m.Payload)).Do(fromMessage(b, m, base))
+			b := fromMessage(b, m, base)
+
+			if s, ok := c.(Scanner); ok {
+				s.Scan(strings.TrimSpace(m.Payload)).Do(b)
+			}
+
+			c.Do(b)
 		})
 
 		menu[i] = telebot.Command{
@@ -47,8 +56,8 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 type Button interface {
 	Text() string
 	Data() string
-	Scan(data string) Button
 	Handler
+	Scanner
 }
 
 func inlineButton(b Button) telebot.InlineButton {
@@ -77,11 +86,17 @@ func RegisterHandlers(b *telebot.Bot, db db.Base, hh []Handler) {
 	)
 
 	for _, h := range hh {
-		switch handler := h.(type) {
-		case Command:
-			commands = append(commands, handler)
-		case Button:
-			buttons = append(buttons, handler)
+		if c, ok := h.(Command); ok {
+			commands = append(commands, c)
+		}
+
+		if b, ok := h.(Button); ok {
+			buttons = append(buttons, b)
+		}
+
+		switch h.(type) {
+		case Command, Button:
+			continue
 		default:
 			log.Fatalf("unknown handler type: %T", h)
 		}

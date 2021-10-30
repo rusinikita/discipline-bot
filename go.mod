@@ -6,6 +6,7 @@ require (
 	github.com/go-resty/resty/v2 v2.6.0
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/iancoleman/strcase v0.2.0
+	github.com/jasonlvhit/gocron v0.0.1
 	github.com/joho/godotenv v1.4.0
 	github.com/mitchellh/mapstructure v1.4.2
 	github.com/stretchr/testify v1.7.0

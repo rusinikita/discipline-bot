@@ -1,6 +1,9 @@
 package bot
 
-import "gopkg.in/tucnak/telebot.v2"
+import (
+	"github.com/rusinikita/discipline-bot/env"
+	"gopkg.in/tucnak/telebot.v2"
+)
 
 // Actions to:
 // send message
@@ -20,7 +23,15 @@ func (r Request) user() *telebot.User {
 		return r.c.Sender
 	}
 
-	return r.m.Sender
+	if r.m != nil {
+		return r.m.Sender
+	}
+
+	if id := env.UserID(); id != 0 {
+		return &telebot.User{ID: id}
+	}
+
+	panic("no user source")
 }
 
 type Message struct {

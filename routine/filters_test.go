@@ -36,7 +36,7 @@ func TestFilters(t *testing.T) {
 	assert.NotEmpty(t, try.ID)
 
 	var (
-		filter  = fmt.Sprintf(`{RoutineTry} = '%s'`, try.Time.Format("02.01.2006 15:04"))
+		filter  = fmt.Sprintf(`{RoutineTry} = '%s'`, try.Time.Format("01/02/2006 15:04"))
 		records []record.Record
 	)
 

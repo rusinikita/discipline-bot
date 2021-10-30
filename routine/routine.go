@@ -12,10 +12,10 @@ import (
 )
 
 type Routine struct {
-	ID          db.ID
-	Name        string
-	Description string
-	Trackers    []db.ID
+	ID           db.ID
+	Name         string
+	ReminderTime string
+	Trackers     []db.ID
 }
 
 type Try struct {

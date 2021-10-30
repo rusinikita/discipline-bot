@@ -17,7 +17,7 @@ func (d taskDone) Data() string {
 	return string(d.taskID)
 }
 
-func (d taskDone) Scan(data string) bot.Button {
+func (d taskDone) Scan(data string) bot.Handler {
 	d.taskID = db.ID(data)
 
 	return d
