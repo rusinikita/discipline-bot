@@ -57,8 +57,13 @@ func (t try) message() (m bot.Message) {
 		}
 	}
 
+	// no buttons if all finished
+	if len(t.trackers) == tracked {
+		m.Buttons = nil
+	}
+
 	m.Text = fmt.Sprintf(
-		"Start '%s' #routine\n\n%d/%d\n\n%s",
+		"'%s' #routine\n\n%d/%d\n\n%s",
 		t.Routine.Name, tracked, len(t.Trackers),
 		strings.Join(ts, "\n"),
 	)
