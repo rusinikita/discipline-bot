@@ -79,7 +79,7 @@ func getTry(id db.ID, b db.Base) (try try, err error) {
 	}
 
 	var (
-		tryPK          = try.Time.Format("01/02/2006 15:04")
+		tryPK          = try.Time.Format("2/01/2006 15:04")
 		trackersFilter = fmt.Sprintf(`FIND("%s", {Routines})`, try.Name)
 		recordsFilter  = fmt.Sprintf(`{RoutineTry} = '%s'`, tryPK)
 		trackers       []tracker.Tracker

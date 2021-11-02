@@ -38,8 +38,10 @@ func (r StartReminder) Do(b bot.Bot) {
 			text := fmt.Sprintf("Time for '%s' #routine", r.Name)
 
 			b.Action(bot.Message{
-				Text:    text,
-				Buttons: nil,
+				Text: text,
+				Buttons: []bot.Button{
+					routine.NewStart(r.Name),
+				},
 			})
 		})
 

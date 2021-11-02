@@ -11,6 +11,12 @@ type start struct {
 	Name string
 }
 
+func NewStart(name string) bot.Button {
+	return start{
+		Name: name,
+	}
+}
+
 func (s start) Text() string {
 	return "Start"
 }

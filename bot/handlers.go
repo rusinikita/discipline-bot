@@ -38,7 +38,8 @@ func registerCommands(b *telebot.Bot, base db.Base, cc []Command) {
 			b := fromMessage(b, m, base)
 
 			if s, ok := c.(Scanner); ok {
-				s.Scan(strings.TrimSpace(m.Payload)).Do(b)
+				//nolint:forcetypeassert // 100% command
+				c = s.Scan(strings.TrimSpace(m.Payload)).(Command)
 			}
 
 			c.Do(b)
